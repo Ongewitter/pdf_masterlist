@@ -1,5 +1,5 @@
 /**
- * This module is about reading a PDF and exporting a sort of list
+ * This module is about reading a PDF and exporting a sort of list.
  * <p>
  * This module reads in an entire PDF
  * Based on keywords, it then generates a list of hits
