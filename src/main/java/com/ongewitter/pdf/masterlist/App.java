@@ -34,15 +34,22 @@ public final class App {
     // column order.
     // stripper.setSortByPosition(true);
 
+    String[] paragraphs, orphans;
     // for (int page = 1; page <= document.getNumberOfPages(); ++page) {
-    for (int page = 1; page <= 10; ++page) {
+    // for (int page = 172; page <= 202; ++page) {
+    for (int page = 175; page <= 175; ++page) {
         // Set the page interval to extract. If you don't, then all pages would be extracted.
         stripper.setStartPage(page);
         stripper.setEndPage(page);
 
-        // let the magic happen
+        // TODO:
+        // Collect text
+        // order hits per key word
+        // Print out all at once
+
         String text = stripper.getText(document);
 
+        matchText(text, paragraphs);
         // do some nice output with a header
         String pageStr = String.format("page %d:", page);
         System.out.println(pageStr);
@@ -66,6 +73,16 @@ public final class App {
    */
   private static void usage() {
     System.err.println("Usage: java " + App.class.getName() + " <input-pdf>");
+  }
+
+  /**
+   * Group text by sticking occurrence in pos[x]
+   * Read in order of hits FULLCAPSTITLE, Time, Roll, Capability, Resistance, Impact
+   * If any are missing add to orphans[]? Most likely to work, emptying out as matches are made :thinking_face:
+   */
+  private static void matchText(final String text, final String[] paragraphs) {
+    String[] hitOrder = { "FULLCAPSTITLE", "Time:", "Roll:", "Capability:", "Resistance:", "Impact:" };
+    
   }
 
     // /**
