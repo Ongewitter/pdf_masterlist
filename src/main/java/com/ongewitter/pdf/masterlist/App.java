@@ -8,23 +8,27 @@ import org.apache.pdfbox.text.PDFTextStripper;
 
 public final class App {
   /**
+   * javac /Users/cedric/Documents/Projects/Java/pdf_masterlist/src/main/java/com/ongewitter/pdf/masterlist/App.java
    * Reads a PDF and spits out a master list.
    * @param args
    * @throws IOException
    */
   public static void main(final String[] args) throws IOException {
+    String file;
     if (args.length != 1) {
       usage();
+      file = "/Users/cedric/Documents/Projects/Java/Fading_Suns_Character_Book.pdf";
+    } else {
+      file = args[0];
     }
 
-    PDDocument document = PDDocument.load(new File(args[0]));
+    PDDocument document = PDDocument.load(new File(file));
     AccessPermission ap = document.getCurrentAccessPermission();
     if (!ap.canExtractContent()) {
         throw new IOException("You do not have permission to extract text");
     }
 
     PDFTextStripper stripper = new PDFTextStripper();
-
     // This example uses sorting, but in some cases it is more useful to switch it off,
     // e.g. in some files with columns where the PDF content stream respects the
     // column order.
@@ -62,7 +66,6 @@ public final class App {
    */
   private static void usage() {
     System.err.println("Usage: java " + App.class.getName() + " <input-pdf>");
-    System.exit(-1);
   }
 
     // /**
