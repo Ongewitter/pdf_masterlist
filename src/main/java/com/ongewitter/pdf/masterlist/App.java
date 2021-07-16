@@ -1,5 +1,6 @@
 package com.ongewitter.pdf.masterlist;
 
+import java.util.*;
 import java.io.File;
 import java.io.IOException;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -34,7 +35,7 @@ public final class App {
     // column order.
     // stripper.setSortByPosition(true);
 
-    String[] paragraphs = {}, orphans = {};
+    List<String> paragraphs = new ArrayList<String>();
     // for (int page = 1; page <= document.getNumberOfPages(); ++page) {
     // for (int page = 172; page <= 202; ++page) {
     for (int page = 175; page <= 175; ++page) {
@@ -96,7 +97,6 @@ public final class App {
   // lered-wasp venom or an Eridolian pearl (Severe).
   // Impact: You correctly identify the substance (or lack 
   // thereof if the drink isn’t spiked).
-
   // REFINE 
   // Action
   // You may refine a substance, polishing it so that it better 
@@ -137,7 +137,6 @@ public final class App {
   // Action 
   // See the Restorative Practices sidebar. Spending time just 
   // reading can help ease anxiety and stir the imagination. 
-
   // RESEARCH
   // Action 
   // Knowledge is a dangerous weapon. To get that weap-
@@ -179,7 +178,6 @@ public final class App {
   // Typical capabilities: Applied Science, Religion 
   // Lore, any relevant Tech Lore for the item or sub-
   // stance being worked
-
   // IDENTIFY SUBSTANCE
   // Action 
   // You can identify just about any substance and gauge 
@@ -188,18 +186,54 @@ public final class App {
 
 
 
-  private static void matchText(final String text, final String[] paragraphs) {
-    String[] hitOrder = { "FULLCAPSTITLE", "Time:", "Roll:", "Capability:", "Resistance:", "Impact:" };
-    String[] hits = text.split("(\\w*\\s?\\w+?)\\nAction");
-    boolean hasOrphans = false;
+  private static void matchText(final String text, final List<String> paragraphs) {
+    String[] hitOrder = { "Action", "Time:", "Roll:", "Capability:", "Resistance:", "Impact:" };
+    String[] hits = text.split("\\n(?=.*\\nAction)"); // Split on Action and previous line
+    List<String> orphans = new ArrayList<String>();
+    // Check for orphans and isolate them
+    System.out.println("----------^hits^------------");
+    System.out.println(hits);
+    System.out.println("----------^Gathering hits^------------");
     for(String hit : hits) {
-     if (hit.indexOf("Action:") == -1) { hasOrphans = true; }
+      System.out.println("----------^singular hit^------------");
+      System.out.println(hit);
+      boolean isOrphan = false;
+      for (String order : hitOrder) {
+        System.out.println("----------^order^------------");
+        System.out.println(order);
+        if (!hit.contains(order)) {
+          isOrphan = true;
+          orphans.add(hit);
+          break;
+        }
+      }
+      if (!isOrphan) {
+        // Add hits
+        paragraphs.add(hit);
+      }
     }
-    if (hasOrphans) {
-      // Check for hitOrder, match those that fail
-      
+    System.out.println("----------^orphans^------------");
+    System.out.println(orphans);
+    // Merge orphans through hitOrder I guess?
+    System.out.println("-----------iterating-----------");
+    if (orphans.size() > 0) {
+      String merged = "";
+      for (String orphan : orphans) {
+        for (String order : hitOrder) {
+          System.out.println(order);
+          System.out.println(merged);
+          System.out.println(orphan);
+          System.out.println("----------------------");
+          if (merged.length() > 0 && merged.contains(order)) { continue; }
+          if (orphan.contains(order)) {
+            merged.concat(orphan);
+            orphans.remove(orphan);
+            break;
+          }
+        }
+      }
     }
-
+    
   }
 
     // /**
